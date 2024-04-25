@@ -1,5 +1,4 @@
 ﻿
-
 add_subdirectory ("Util")
 add_subdirectory ("Storm")
 
@@ -29,6 +28,14 @@ set(MODULE_FILES
 
 add_library (SNP SHARED ${MODULE_FILES})
 
+set(outname "ValveSockets")
+
+set_target_properties (SNP
+	PROPERTIES
+		OUTPUT_NAME ${outname}
+		SUFFIX ".snp"
+)
+
 if(WIN32)
   target_link_libraries(SNP wsock32 ws2_32)
 endif()
@@ -43,12 +50,35 @@ target_link_libraries(SNP
 	Util
 )
 
+message(STATUS "${CMAKE_SOURCE_DIR}/SNP/caps.mpq")
+message(STATUS "${CMAKE_BINARY_DIR}/SNP/${outname}.snp")
 
-install(
-	TARGETS SNP
-	COMPONENT Libraries)
+#158kb
+#file(READ ${CMAKE_SOURCE_DIR}/SNP/caps.mpq mpqfile)
+#message(STATUS "${mpqfile}")
+#file(APPEND ${CMAKE_BINARY_DIR}/SNP/${outname}.snp "${mpqfile}")
 
-install(
-    FILES DLLMain.cpp
-    DESTINATION SNP
-    COMPONENT Headers)
+set( filenames
+	"${CMAKE_SOURCE_DIR}/SNP/caps.mpq"
+	"${CMAKE_BINARY_DIR}/SNP/${outname}.snp"
+)
+
+
+
+# $<TARGET_FILE:SNP>
+set ( mpqfile "${CMAKE_SOURCE_DIR}/SNP/caps.mpq" )
+
+message(STATUS "${mpqfile}")
+
+add_custom_command( TARGET SNP
+	POST_BUILD
+	COMMAND cmd /C "copy /Y /B \"$<SHELL_PATH:$<TARGET_FILE:SNP>>\" + \"$<SHELL_PATH:${mpqfile}>\" \"$<SHELL_PATH:$<TARGET_FILE:SNP>>\""
+	
+)
+
+install(TARGETS SNP
+	DESTINATION "C:/Cosmonarchy/Starcraft/"
+)
+
+
+# mklink linked.snp "C:\Users\Jesse\source\repos\SNP\out\build\x86-debug\SNP\ValveSockets.snp
