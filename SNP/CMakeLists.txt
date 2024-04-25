@@ -2,8 +2,9 @@
 add_subdirectory ("Util")
 add_subdirectory ("Storm")
 
+SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 set(MODULE_FILES
-	LocalPC.h
 	Output.cpp
 	Output.h
 	SettingsDialog.cpp
@@ -18,12 +19,12 @@ set(MODULE_FILES
 	resource.h
 	SNPModule.def
 	UDPSocket.cpp
-	CMakeLists.txt
 	CriticalSection.h
 	DirectIP.cpp
 	DirectIP.h
 	DLLMain.cpp
-	LocalPC.cpp
+	#LocalPC.cpp
+	#LocalPC.h
 )
 
 add_library (SNP SHARED ${MODULE_FILES})
@@ -36,10 +37,7 @@ set_target_properties (SNP
 		SUFFIX ".snp"
 )
 
-if(WIN32)
-  target_link_libraries(SNP wsock32 ws2_32)
-endif()
-
+target_link_libraries(SNP wsock32 ws2_32)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET SNP PROPERTY CXX_STANDARD 20)
@@ -53,10 +51,6 @@ target_link_libraries(SNP
 message(STATUS "${CMAKE_SOURCE_DIR}/SNP/caps.mpq")
 message(STATUS "${CMAKE_BINARY_DIR}/SNP/${outname}.snp")
 
-#158kb
-#file(READ ${CMAKE_SOURCE_DIR}/SNP/caps.mpq mpqfile)
-#message(STATUS "${mpqfile}")
-#file(APPEND ${CMAKE_BINARY_DIR}/SNP/${outname}.snp "${mpqfile}")
 
 set( filenames
 	"${CMAKE_SOURCE_DIR}/SNP/caps.mpq"
@@ -64,11 +58,7 @@ set( filenames
 )
 
 
-
-# $<TARGET_FILE:SNP>
 set ( mpqfile "${CMAKE_SOURCE_DIR}/SNP/caps.mpq" )
-
-message(STATUS "${mpqfile}")
 
 add_custom_command( TARGET SNP
 	POST_BUILD

@@ -4,8 +4,8 @@
 // these modi are implemented in this DLL
 #include "DirectIP.h"
 #define DRIP_ID 0
-#include "LocalPC.h"
-#define SMEM_ID 1
+//include "LocalPC.h"
+//define SMEM_ID 1
 
 
 BOOL WINAPI SnpQuery(DWORD dwIndex, DWORD *dwNetworkCode, char **ppszNetworkName, char **ppszNetworkDescription, CAPS **ppCaps)
@@ -20,12 +20,12 @@ BOOL WINAPI SnpQuery(DWORD dwIndex, DWORD *dwNetworkCode, char **ppszNetworkName
       *ppszNetworkDescription =  DRIP::networkInfo.pszDescription;
       *ppCaps                 = &DRIP::networkInfo.caps;
       return TRUE;
-    case SMEM_ID:
-      *dwNetworkCode          =  SMEM::networkInfo.dwIdentifier;
-      *ppszNetworkName        =  SMEM::networkInfo.pszName;
-      *ppszNetworkDescription =  SMEM::networkInfo.pszDescription;
-      *ppCaps                 = &SMEM::networkInfo.caps;
-      return TRUE;
+    //case SMEM_ID:
+    //  *dwNetworkCode          =  SMEM::networkInfo.dwIdentifier;
+    //  *ppszNetworkName        =  SMEM::networkInfo.pszName;
+    //  *ppszNetworkDescription =  SMEM::networkInfo.pszDescription;
+    //  *ppCaps                 = &SMEM::networkInfo.caps;
+    //  return TRUE;
     default:
       return FALSE;
     }
@@ -43,10 +43,10 @@ BOOL WINAPI SnpBind(DWORD dwIndex, SNP::NetFunctions **ppFxns)
       *ppFxns = &SNP::spiFunctions;
       SNP::pluggedNetwork = (SNP::Network<SNP::SOCKADDR>*)(new DRIP::DirectIP());
       return TRUE;
-    case SMEM_ID:
-      *ppFxns = &SNP::spiFunctions;
-      SNP::pluggedNetwork = (SNP::Network<SNP::SOCKADDR>*)(new SMEM::LocalPC());
-      return TRUE;
+    //case SMEM_ID:
+    //  *ppFxns = &SNP::spiFunctions;
+    //  SNP::pluggedNetwork = (SNP::Network<SNP::SOCKADDR>*)(new SMEM::LocalPC());
+    //  return TRUE;
     default:
       return FALSE;
     }
