@@ -31,8 +31,8 @@ set(MODULE_FILES
 	DirectIP.cpp
 	DirectIP.h
 	DLLMain.cpp
-	#signalling.h
-	#signalling.cpp
+	signalling.h
+	signalling.cpp
 	#LocalPC.cpp
 	#LocalPC.h
 )
