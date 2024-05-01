@@ -1,4 +1,8 @@
 {
-  "dependencies": [
-  ]
+    "dependencies": [
+        {
+            "name": "openssl-windows",
+            "platform": "windows & x86 & static"
+        }
+    ]
 }

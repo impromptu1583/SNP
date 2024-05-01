@@ -2,7 +2,8 @@
 add_subdirectory ("Util")
 add_subdirectory ("Storm")
 
-SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+	
+#SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 set(MODULE_FILES
 	Output.cpp
@@ -23,6 +24,8 @@ set(MODULE_FILES
 	DirectIP.cpp
 	DirectIP.h
 	DLLMain.cpp
+	signalling.h
+	#signalling.cpp
 	#LocalPC.cpp
 	#LocalPC.h
 )
@@ -35,17 +38,39 @@ set_target_properties (SNP
 	PROPERTIES
 		OUTPUT_NAME ${outname}
 		SUFFIX ".snp"
+		VS_DEBUGGER_COMMAND "${SCEXE}"
 )
 
 target_link_libraries(SNP wsock32 ws2_32)
+
+
+#juice
+#target_include_directories(SNP PUBLIC ${CMAKE_SOURCE_DIR}/SNP/include/h)
+#add_library(JUICE SHARED IMPORTED)
+#set_property(TARGET JUICE PROPERTY
+#	IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/SNP/include/bin/juice.dll"
+#)
+#set_property(TARGET JUICE PROPERTY
+#	IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/SNP/include/lib/juice.lib"
+#)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET SNP PROPERTY CXX_STANDARD 20)
 endif()
 
+#target_link_directories(SNP PRIVATE ${CMAKE_SOURCE_DIR}/Juice)
+
+target_include_directories(SNP PUBLIC ${CMAKE_SOURCE_DIR}/include/h)
+add_library(STEAMNETWORKINGSOCKETS SHARED IMPORTED)
+set_property(TARGET STEAMNETWORKINGSOCKETS PROPERTY
+             IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/include/bin/GameNetworkingSockets.dll")
+set_property(TARGET STEAMNETWORKINGSOCKETS PROPERTY
+             IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/include/lib/GameNetworkingSockets.lib")
+
 target_link_libraries(SNP
 	Storm
 	Util
+	STEAMNETWORKINGSOCKETS
 )
 
 message(STATUS "${CMAKE_SOURCE_DIR}/SNP/caps.mpq")
@@ -69,6 +94,7 @@ add_custom_command( TARGET SNP
 install(TARGETS SNP
 	DESTINATION "C:/Cosmonarchy/Starcraft/"
 )
+
 
 
 # mklink linked.snp "C:\Users\Jesse\source\repos\SNP\out\build\x86-debug\SNP\ValveSockets.snp

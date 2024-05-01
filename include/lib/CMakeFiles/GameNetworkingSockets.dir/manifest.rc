@@ -1,0 +1,2 @@
+#pragma code_page(65001)
+2 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */ "C:/Users/Jesse/source/repos/GameNetworkingSockets-p2p/out/build/x86-Debug/src/CMakeFiles/GameNetworkingSockets.dir/embed.manifest"
