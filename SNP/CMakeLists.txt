@@ -6,6 +6,13 @@ add_subdirectory ("Storm")
 #SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
 set(MODULE_FILES
+	Storm/storm.h
+	Storm/storm.cpp
+	Util/MemoryFrame.cpp
+	Util/MemoryFrame.h
+	Util/Types.h
+	Util/Exceptions.h
+	Util/Exceptions.cpp
 	Output.cpp
 	Output.h
 	SettingsDialog.cpp
@@ -24,7 +31,7 @@ set(MODULE_FILES
 	DirectIP.cpp
 	DirectIP.h
 	DLLMain.cpp
-	signalling.h
+	#signalling.h
 	#signalling.cpp
 	#LocalPC.cpp
 	#LocalPC.h
@@ -40,8 +47,9 @@ set_target_properties (SNP
 		SUFFIX ".snp"
 		VS_DEBUGGER_COMMAND "${SCEXE}"
 )
-
-target_link_libraries(SNP wsock32 ws2_32)
+target_include_directories(SNP PUBLIC ${CMAKE_SOURCE_DIR}/SNP/Storm)
+target_include_directories(SNP PUBLIC ${CMAKE_SOURCE_DIR}/SNP/Util)
+#target_link_libraries(SNP wsock32 ws2_32)
 
 
 #juice
@@ -60,17 +68,19 @@ endif()
 
 #target_link_directories(SNP PRIVATE ${CMAKE_SOURCE_DIR}/Juice)
 
+
+
 target_include_directories(SNP PUBLIC ${CMAKE_SOURCE_DIR}/include/h)
 add_library(STEAMNETWORKINGSOCKETS SHARED IMPORTED)
 set_property(TARGET STEAMNETWORKINGSOCKETS PROPERTY
-             IMPORTED_LOCATION "${CMAKE_SOURCE_DIR}/include/bin/GameNetworkingSockets.dll")
+             IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/include/bin/GameNetworkingSockets.dll")
 set_property(TARGET STEAMNETWORKINGSOCKETS PROPERTY
              IMPORTED_IMPLIB "${CMAKE_SOURCE_DIR}/include/lib/GameNetworkingSockets.lib")
 
 target_link_libraries(SNP
-	Storm
-	Util
-	STEAMNETWORKINGSOCKETS
+	PRIVATE STEAMNETWORKINGSOCKETS
+	PUBLIC wsock32
+	PUBLIC ws2_32
 )
 
 message(STATUS "${CMAKE_SOURCE_DIR}/SNP/caps.mpq")
